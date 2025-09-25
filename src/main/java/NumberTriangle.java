@@ -1,4 +1,6 @@
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This is the provided NumberTriangle class to be used in this coding task.
@@ -62,8 +64,24 @@ public class NumberTriangle {
      *
      * Note: a NumberTriangle contains at least one value.
      */
-    public void maxSumPath() {
+    public double maxSumPath() {
         // for fun [not for credit]:
+        if (isLeaf()){
+            return 1;
+        }
+        else {
+            double leftNum = 0;
+            double rightNum = 0;
+
+            if (this.left != null){
+                leftNum = this.left.maxSumPath();
+            }
+            if (this.right != null){
+                rightNum = this.right.maxSumPath();
+            }
+            return 1 + Math.max(leftNum, rightNum);
+        }
+
     }
 
 
@@ -88,7 +106,24 @@ public class NumberTriangle {
      *
      */
     public int retrieve(String path) {
-        // TODO implement this method
+        if (path == null) throw new IllegalArgumentException("path is null");
+
+        if (path.isEmpty()){
+            return this.getRoot();
+        }
+
+        char direction = path.charAt(0);
+        String newPath = path.substring(1);
+
+        if (direction == 'l') {
+            if (this.left == null) return -1;
+            return this.left.retrieve(newPath);
+            }
+        else if (direction == 'r') {
+            if (this.right == null) return -1;
+            return this.right.retrieve(newPath);
+            }
+
         return -1;
     }
 
@@ -110,19 +145,35 @@ public class NumberTriangle {
         BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
 
 
-        // TODO define any variables that you want to use to store things
-
         // will need to return the top of the NumberTriangle,
         // so might want a variable for that.
         NumberTriangle top = null;
 
         String line = br.readLine();
+        List<NumberTriangle> prevRow = null;
+
         while (line != null) {
 
-            // remove when done; this line is included so running starter code prints the contents of the file
-            System.out.println(line);
+            String[] parts = line.split("\\s+");
 
-            // TODO process the line
+            List<NumberTriangle> currRow = new ArrayList<>(parts.length);
+            for (String p : parts){
+                int val = Integer.parseInt(p);
+                currRow.add(new NumberTriangle(val));
+            }
+            if (top == null){
+                top = currRow.get(0);
+            }
+            if (prevRow == null){
+                prevRow = currRow;
+                line = br.readLine();
+                continue;
+            }
+            for (int j =0; j < prevRow.size(); j++){
+                prevRow.get(j).setLeft(currRow.get(j));
+                prevRow.get(j).setRight(currRow.get(j+1));
+            }
+
 
             //read the next line
             line = br.readLine();
