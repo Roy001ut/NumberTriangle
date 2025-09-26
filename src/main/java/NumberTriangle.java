@@ -161,6 +161,7 @@ public class NumberTriangle {
                 int val = Integer.parseInt(p);
                 currRow.add(new NumberTriangle(val));
             }
+
             if (top == null){
                 top = currRow.get(0);
             }
@@ -176,6 +177,7 @@ public class NumberTriangle {
 
 
             //read the next line
+            prevRow = currRow;
             line = br.readLine();
         }
         br.close();
