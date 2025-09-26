@@ -177,6 +177,7 @@ public class NumberTriangle {
 
 
             //read the next line
+            prevRow = currRow;
             line = br.readLine();
         }
         br.close();
